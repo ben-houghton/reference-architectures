@@ -87,9 +87,6 @@
                   "useExistingAvailabilitySet": "No",
                   "name": "operational-ad-as"
                 }
-              },
-              "metadata": {
-              "description": "Settings for AD VMs"
               }
             },
             "virtualNetworkSettings": {

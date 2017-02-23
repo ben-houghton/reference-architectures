@@ -1,0 +1,55 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  },
+  "variables": {
+    "templateBaseUrl": "https://raw.githubusercontent.com/mspnp/template-building-blocks/master/",
+    "localRepoBaseUrl": "https://raw.githubusercontent.com/ben-houghton/threetiertemplate/master/",
+
+    "buildingBlocks": {
+      "virtualMachineExtensionsTemplate": "[concat(variables('templateBaseUrl'), 'templates/buildingBlocks/virtualMachine-extensions/azuredeploy.json')]"
+    },
+    "parameterFiles": {
+      "azureVmDomainJoinExtensionParametersFile": "[concat(variables('localRepoBaseUrl'), 'parameters/azure/vm-domain-join.parameters.json')]",
+      "azureVmEnableWindowsAuthExtensionParametersFile": "[concat(variables('localRepoBaseUrl'), 'parameters/azure/vm-enable-windows-auth.parameters.json')]"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-01-01",
+      "name": "domain-join-deployment",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('buildingBlocks').virtualMachineExtensionsTemplate]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "[variables('parameterFiles').azureVmDomainJoinExtensionParametersFile]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-01-01",
+      "name": "windows-auth-deployment",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('buildingBlocks').virtualMachineExtensionsTemplate]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parametersLink": {
+          "uri": "[variables('parameterFiles').azureVmEnableWindowsAuthExtensionParametersFile]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
+

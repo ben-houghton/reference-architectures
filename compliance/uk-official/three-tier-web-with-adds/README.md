@@ -1,4 +1,4 @@
-Microsoft Azure UK-OFFICIAL Three Tier Web Application Architecture
+Deployment of a Microsoft Azure Three Tier Web Application Architecture That Aligns To UK-OFFICIAL Classification.
 ===================================================================
 
 ##Contents
@@ -28,7 +28,7 @@ Microsoft Azure UK-OFFICIAL Three Tier Web Application Architecture
 Overview
 ========
 
- This document provides guidance and automation scripts to deliver a Microsoft Azure three-tier web based workload that is classified as United Kingdom UK-OFFICIAL.
+ This document provides guidance and automation scripts to deliver a Microsoft Azure three-tier web based workload that aligns to United Kingdom UK-OFFICIAL classification and NCSC guidance.
 
  Using an Infrastructure as Code approach, the set of [Azure Resource
  Manager](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview)

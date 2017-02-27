@@ -35,6 +35,17 @@
               "destinationPortRange": "3389",
               "access": "Allow",
               "protocol": "Tcp"
+            },
+            {
+              "name": "OpsTrafficAllow",
+              "direction": "Inbound",
+              "priority": 110,
+              "sourceAddressPrefix": "10.0.0.0/16",
+              "destinationAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "access": "Allow",
+              "protocol": "*"
             }
           ]
         }

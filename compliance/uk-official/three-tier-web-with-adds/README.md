@@ -37,17 +37,14 @@ Overview
  Controls](https://www.cisecurity.org/critical-controls.cfm) to ensure
  a UK-OFFICIAL compliant architecture.
 
- This architecture and corresponding ARM templates are underpinned by
- the Microsoft whitepaper [14 Cloud Security Controls for UK Cloud Using Microsoft Azure](https://gallery.technet.microsoft.com/14-Cloud-Security-Controls-670292c1)
+ This architecture and corresponding ARM templates are underpinned by the Microsoft whitepaper [14 Cloud Security Controls for UK Cloud Using Microsoft Azure](https://gallery.technet.microsoft.com/14-Cloud-Security-Controls-670292c1)
  . This paper catalogue how Azure services align with the fourteen
  cloud security principles set forth in the CESG/NCSC publication [Implementing the Cloud Security Principles](https://www.ncsc.gov.uk/guidance/implementing-cloud-security-principles)"
  thereby enabling organisations to fast-track their ability to meet
  their compliance obligations using cloud-based services globally and
  in the UK on the Microsoft Azure cloud.
 
- This template deploys the infrastructure for the workload. Application
- code and supporting business tier and data tier software must be
- installed and configured.
+ This template deploys the infrastructure for the workload. Application code and supporting business tier and data tier software must be installed and configured.
 
  If you do not have an Azure subscription then you can sign up quickly and easily, [Get Started with Azure](https://azure.microsoft.com/en-us/get-started/).
 
@@ -414,17 +411,13 @@ Portal.
 ## Deployment Process
 
 A deployment for this reference architecture is available on
-[GitHub](https://github.com/ben-houghton/threetiertemplate/tree/master/templates).
-The reference architecture is deployed in four stages. To deploy the
-architecture, follow these steps for each deployment stage -
+[GitHub](https://github.com/ben-houghton/threetiertemplate/tree/master/templates). The templates can be cloned or downloaded if customisation of parameters are requried.
+The reference architecture is deployed in four stages. To deploy the architecture, follow these steps for each deployment stage -
 
 For Virtual Machines The parameter files include a hard-coded
-administrator user names and passwords, and it is *strongly recommended
-that you immediately change both on all the VMs*. Click on each VM in the
-Azure portal then click on **Reset password** in the **Support
+administrator user names and passwords. These values can be changed in the parameter files if required. Tt is *strongly recommended
+that you immediately change both on all the VMs*. Click on each VM in the Azure portal then click on **Reset password** in the **Support
 troubleshooting** blade.
-
-<!-- or change them int he parameter files -->
 
 ## Deploy Networking Infrastructure
   
@@ -438,7 +431,7 @@ troubleshooting** blade.
 1. Click on the **Deploy to Azure** button to begin the first stage of the deployment. The link takes you to the Azure Portal.
 2. Select **Create New** and enter a value such as `uk-official-networking-rg` in the **Resource group** textbox.
 3. Select a region such as `UKSouth` from the **Location** drop down box (All Resource Groups required for this architecture should be in the same Azure region e.g. `UKSouth`
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes.
+4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
 5. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
 6. Click on the **Purchase** button.
 7. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
@@ -456,8 +449,7 @@ troubleshooting** blade.
 1. Click on the **Deploy to Azure** button to begin the first stage of the deployment. The link takes you to the Azure Portal.
 2. Select **Create New** and enter a value such as `uk-official-ad-rg` in the **Resource group** textbox.
 3. Select a region such as `UKSouth` from the **Location** drop down box (All Resource Groups required for this architecture should be in the same Azure region e.g. `UKSouth`.
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes.
-<!-- I'm not sure we should say this. Maybe we should say that if they want to edit the parameter files, they can do so and provide the URI for the parameters here -->
+4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
 5. In the **Settings** textboxes, enter the operational Virtual Network name and resource group as entered when creating the networking infrastructure in deployment step 1.
 
 ![alt text](images/create-official-aads-rg.JPG?raw=true "Create ADDS deployment")
@@ -478,7 +470,7 @@ troubleshooting** blade.
 1. Click on the **Deploy to Azure** button to begin the first stage of the deployment. The link takes you to the Azure Portal.
 2. Select **Create New** and enter a value such as `uk-official-ops-rg` in the **Resource group** textbox.
 3. Select a region such as `UKSouth` from the **Location** drop down box (All Resource Groups required for this architecture should be in the same Azure region e.g. `UKSouth`
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes.
+4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
 5. In the **Settings** textboxes, enter the operational Virtual Network name and resource group as entered when creating the networking infrastructure in deployment step 1.
 
 ![alt text](/images/create-official-ops-rg.JPG?raw=true "Create ADDS deployment").
@@ -498,7 +490,7 @@ troubleshooting** blade.
 
 1. Click on the *Deploy to Azure* button to begin the first stage of the deployment. The link takes you to the Azure Portal.
 2. Select **Use Existing** and select the resource group you created for the operational workload deployment from the **Resource group** drop down
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes.
+4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
 6. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
 7. Click on the **Purchase** button.
 8. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.

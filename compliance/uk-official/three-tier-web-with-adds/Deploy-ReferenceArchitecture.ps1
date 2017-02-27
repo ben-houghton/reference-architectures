@@ -52,6 +52,7 @@ $azureMgmtVirtualNetworkParametersFile = [System.IO.Path]::Combine($PSScriptRoot
 $operationalVnetPeeringParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\operational-vnet-peering.parameters.json")
 $mgmtVnetPeeringParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\mgmt-vnet-peering.parameters.json")
 $nsgParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\nsg-rules.parameters.json")
+$opsNsgParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\ops-vent-nsgs.json")
 #aads
 $azureAddsVirtualMachinesParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\virtualMachines-adds.parameters.json")
 $azureCreateAddsForestExtensionParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\create-adds-forest-extension.parameters.json")
@@ -111,6 +112,10 @@ if ($Mode -eq "Infrastructure" -Or $Mode -eq "Prepare") {
 	 New-AzureRmResourceGroupDeployment -Name "nsg-deployment" -ResourceGroupName $azureNetworkResourceGroupName.ResourceGroupName `
         -TemplateUri $nsgTemplate.AbsoluteUri -TemplateParameterFile $nsgParametersFile
 
+	#Create NSGs for ops VNET
+	 Write-Host "Deploying NSGs"
+	 New-AzureRmResourceGroupDeployment -Name "ops-nsg-deployment" -ResourceGroupName $azureNetworkResourceGroupName.ResourceGroupName `
+        -TemplateUri $nsgTemplate.AbsoluteUri -TemplateParameterFile $opsNsgParametersFile
 }
 
 

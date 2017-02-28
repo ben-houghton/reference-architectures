@@ -1,4 +1,4 @@
-Deployment of a Microsoft Azure Three Tier Web Application Architecture That Aligns To UK-OFFICIAL Classification.
+A Microsoft Azure Three Tier Web Application Architecture For Workloads Classified as UK-OFFICIAL.
 ===================================================================
 
 ##Contents
@@ -28,21 +28,17 @@ Deployment of a Microsoft Azure Three Tier Web Application Architecture That Ali
 Overview
 ========
 
- This document provides guidance and automation scripts to deliver a Microsoft Azure three-tier web based workload that aligns to United Kingdom UK-OFFICIAL classification and NCSC guidance.
+ This article provides guidance and automation scripts to deliver a Microsoft Azure three-tier web based architecture appropriate for handling many workloads classified as OFFICIAL in the United Kingdom.    
 
- Using an Infrastructure as Code approach, the set of [Azure Resource
- Manager](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview)
- (ARM) templates deploy an environment that aligns to the National
- Cyber Security Centre (NCSC) [Cloud Security Principles](https://www.ncsc.gov.uk/guidance/implementing-cloud-security-principles) and  the Center for Internet Security (CIS) [Critical Security
- Controls](https://www.cisecurity.org/critical-controls.cfm) to ensure
- a UK-OFFICIAL compliant architecture.
+ Using an Infrastructure as Code approach, the set of [Azure Resource Manager](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview)
+ (ARM) templates deploy an environment that aligns to the National Cyber Security Centre (NCSC) [Cloud Security Principles](https://www.ncsc.gov.uk/guidance/implementing-cloud-security-principles) and  the Center for Internet Security (CIS) [Critical Security
+ Controls](https://www.cisecurity.org/critical-controls.cfm).
 
- This architecture and corresponding ARM templates are underpinned by the Microsoft whitepaper [14 Cloud Security Controls for UK Cloud Using Microsoft Azure](https://gallery.technet.microsoft.com/14-Cloud-Security-Controls-670292c1)
- . This paper catalogue how Azure services align with the fourteen
+ The NCSC recommend their Cloud Security Principles be used by customers to evaluate the security properties of the service, and to help understand the division of responsibility between the customer and supplier. We’ve provided information against each of these principles to help you understand the split of responsibilities.
+
+ This architecture and corresponding ARM templates are underpinned by the Microsoft whitepaper [14 Cloud Security Controls for UK Cloud Using Microsoft Azure](https://gallery.technet.microsoft.com/14-Cloud-Security-Controls-670292c1). This paper catalogue how Azure services align with the fourteen
  cloud security principles set forth in the CESG/NCSC publication [Implementing the Cloud Security Principles](https://www.ncsc.gov.uk/guidance/implementing-cloud-security-principles)"
- thereby enabling organisations to fast-track their ability to meet
- their compliance obligations using cloud-based services globally and
- in the UK on the Microsoft Azure cloud.
+ thereby enabling organisations to fast-track their ability to meet their compliance obligations using cloud-based services globally and in the UK on the Microsoft Azure cloud.
 
  This template deploys the infrastructure for the workload. Application code and supporting business tier and data tier software must be installed and configured.
 
@@ -71,7 +67,7 @@ Architecture Diagram and Components
 
 4.  **Business tier:** Implements business processes and other functional logic for the system.
 
-5.  **Database tier:** Provides persistent data storage, using [SQL Server Always On Availability Groups](https://msdn.microsoft.com/en-us/library/hh510230.aspx) for high availability.
+5.  **Database tier:** Provides persistent data storage, using [SQL Server Always On Availability Groups](https://msdn.microsoft.com/en-us/library/hh510230.aspx) for high availability. Customers may wish to consider using [Azure SQL Database](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-technical-overview) as a PaaS alternative
 
 6.  **Gateway**: The [VPN Gateway](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways) provides connectivity between the routers in the on-premises network and the Production VNet.
 
@@ -90,6 +86,11 @@ Architecture Diagram and Components
 
 13. **Active Directory Domain Services (AD DS):** This architecture provides a dedicated [Active Directory](https://msdn.microsoft.com/library/azure/jj156090.aspx) [Active Directory Domain Services](https://technet.microsoft.com/library/dd448614.aspx) into a separate forest in the cloud.
 
+14. **Logging and Audit:** [Azure Activity Log](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs) captures operations 
+taken on the resources in your subscription such as who initiated the operation, when the operation occurred, the status of the operation and the values of other properties that might help you research the operation. 
+Azure Activity Log is an Azure platform service that captures all actions on a subscription. Logs can be archived or exported if requried.
+
+15. **Network Monitoring and Alerting** [Azure Network Watcher](https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview) is a platform service provides network packet capture, flow logging, topology tools and diagnostics  for network traffics within your VNets. 
 
 
 Guidance and Recommendations 
@@ -113,7 +114,7 @@ Guidance and Recommendations
 > the activity log, metrics, and diagnostic logs of all your Azure
 > resources. Azure Monitor can be configured to visualize, query, route,
 > archive, and act on the metrics and logs coming from resources in
-> Azure.
+> Azure. It is recommended that Resource Based Access Control is used to secure the audit trail to ensure that users don’t have the ability to modify the logs.
 >
 > **Activity Logs**: Configure [Azure Activity
 > Logs](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs)
@@ -431,7 +432,7 @@ troubleshooting** blade.
 1. Click on the **Deploy to Azure** button to begin the first stage of the deployment. The link takes you to the Azure Portal.
 2. Select **Create New** and enter a value such as `uk-official-networking-rg` in the **Resource group** textbox.
 3. Select a region such as `UKSouth` from the **Location** drop down box (All Resource Groups required for this architecture should be in the same Azure region e.g. `UKSouth`
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
+4. Some parameters can be edited in the deployment page. If greater customisation is requried this can be down through cloning and editing the templates directly, or in situ by editing the templates by clicking 'Edit template'.
 5. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
 6. Click on the **Purchase** button.
 7. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
@@ -447,17 +448,18 @@ troubleshooting** blade.
 </a>
 
 1. Click on the **Deploy to Azure** button to begin the first stage of the deployment. The link takes you to the Azure Portal.
-2. Select **Create New** and enter a value such as `uk-official-ad-rg` in the **Resource group** textbox.
+2. Select **Create New** and enter a value such as `uk-official-adds-rg` in the **Resource group** textbox.
 3. Select a region such as `UKSouth` from the **Location** drop down box (All Resource Groups required for this architecture should be in the same Azure region e.g. `UKSouth`.
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
-5. In the **Settings** textboxes, enter the operational Virtual Network name and resource group as entered when creating the networking infrastructure in deployment step 1.
+4. Some parameters can be edited in the deployment page. If greater customisation is requried this can be down through cloning and editing the templates directly, or in situ by editing the templates by clicking 'Edit template'.
+5. In the **Settings** textboxes, enter the networking resource group as entered when creating the networking infrastructure in deployment step 1.
+6. Enter the Domain settings and Admin credentials.
+7. Review the terms and conditions, then click the **I agree to the terms and conditions stated above* checkbox.
+8. Click on the **Purchase** button.
+9. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
+10. If for some reason your deployment fails. To avoid incurring cost and orphan resources it is advisable to delete the resource group in its entirety, fix the issue and redeploy the resource groups and template.
 
 ![alt text](images/create-official-aads-rg.JPG?raw=true "Create ADDS deployment")
 
-6. Review the terms and conditions, then click the **I agree to the terms and conditions stated above* checkbox.
-7. Click on the **Purchase** button.
-8. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
-9. If for some reason your deployment fails. To avoid incurring cost and orphan resources it is advisable to delete the resource group in its entirety, fix the issue and redeploy the resource groups and template.
 
 ## Deploy operational workload infrastructure 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fben-houghton%2Fthreetiertemplate%2Fmaster%2Ftemplates%2Fworkloads.azuredeploy.json" target="_blank">
@@ -468,17 +470,18 @@ troubleshooting** blade.
 </a>
 
 1. Click on the **Deploy to Azure** button to begin the first stage of the deployment. The link takes you to the Azure Portal.
-2. Select **Create New** and enter a value such as `uk-official-ops-rg` in the **Resource group** textbox.
+2. Select **Create New** and enter a value such as `uk-official-operational-rg` in the **Resource group** textbox.
 3. Select a region such as `UKSouth` from the **Location** drop down box (All Resource Groups required for this architecture should be in the same Azure region e.g. `UKSouth`
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
-5. In the **Settings** textboxes, enter the operational Virtual Network name and resource group as entered when creating the networking infrastructure in deployment step 1.
+4. Some parameters can be edited in the deployment page. If greater customisation is requried this can be down through cloning and editing the templates directly, or in situ by editing the templates by clicking 'Edit template'.
+5. In the **Settings** textboxes, enter the operational network resource group as entered when creating the networking infrastructure in deployment step 1.
+6. Enter the Virtual Machine Admin credentials.
+7. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
+8. Click on the **Purchase** button.
+9. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
+10. If for some reason your deployment fails. To avoid incurring cost and orphan resources it is advisable to delete the resource group in its entirety, fix the issue and redeploy the resource groups and template.
 
-![alt text](/images/create-official-ops-rg.JPG?raw=true "Create ADDS deployment").
+![alt text](/images/create-official-workload-rg.JPG?raw=true "Create ADDS deployment").
 
-6. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
-7. Click on the **Purchase** button.
-8. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
-9. If for some reason your deployment fails. To avoid incurring cost and orphan resources it is advisable to delete the resource group in its entirety, fix the issue and redeploy the resource groups and template.
 
 ## Execute post deployment configuration
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fben-houghton%2Fthreetiertemplate%2Fmaster%2Ftemplates%2Fpostsetup.azuredeploy.json" target="_blank">
@@ -490,11 +493,16 @@ troubleshooting** blade.
 
 1. Click on the *Deploy to Azure* button to begin the first stage of the deployment. The link takes you to the Azure Portal.
 2. Select **Use Existing** and select the resource group you created for the operational workload deployment from the **Resource group** drop down
-4. Do not edit the **Template Root Uri** or the **Parameter Root Uri** text boxes if using the provided parameters. If the templates or parameters have been been customised, provide the URLs to the customised files in these textboxes.
-6. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
-7. Click on the **Purchase** button.
-8. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
-9. If for some reason your deployment fails check the deployment messages blade for futher information.
+4. Some parameters can be edited in the deployment page. If greater customisation is requried this can be down through cloning and editing the templates directly, or in situ by editing the templates by clicking 'Edit template'.
+5. In the **Settings** textboxes, enter the AD domain name and Admin credentials.
+7. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
+8. Click on the **Purchase** button.
+9. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
+10. If for some reason your deployment fails check the deployment messages blade for futher information.
+
+![alt text](/images/create-postdeployment.JPG?raw=true "Deploy post deployment configuration").
+
+
 
 ##(Optional) PowerShell Deployment 
 

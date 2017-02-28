@@ -83,7 +83,8 @@ Login-AzureRmAccount -SubscriptionId $SubscriptionId  #| Out-Null
 
 if ($Mode -eq "Infrastructure" -Or $Mode -eq "Prepare") {
 
-    
+
+    #Create resource group
 	Write-Host "Creating Networking resource group..."
     $azureNetworkResourceGroup = New-AzureRmResourceGroup -Name $azureNetworkResourceGroupName -Location $Location
 
@@ -107,7 +108,7 @@ if ($Mode -eq "Infrastructure" -Or $Mode -eq "Prepare") {
 	New-AzureRmResourceGroupDeployment -Name "mgmt-vnetpeer-deployment" -ResourceGroupName $azureNetworkResourceGroup.ResourceGroupName `
 	-TemplateFile $vnetPeeringTemplate -TemplateParameterFile $operationalVnetPeeringParametersFile
 
-	#Create NSGs for management VNET
+	##Create NSGs for management VNET
 	 Write-Host "Deploying NSGs"
 	 New-AzureRmResourceGroupDeployment -Name "nsg-deployment" -ResourceGroupName $azureNetworkResourceGroupName.ResourceGroupName `
         -TemplateUri $nsgTemplate.AbsoluteUri -TemplateParameterFile $nsgParametersFile
@@ -116,12 +117,13 @@ if ($Mode -eq "Infrastructure" -Or $Mode -eq "Prepare") {
 	 Write-Host "Deploying NSGs"
 	 New-AzureRmResourceGroupDeployment -Name "ops-nsg-deployment" -ResourceGroupName $azureNetworkResourceGroupName.ResourceGroupName `
         -TemplateUri $nsgTemplate.AbsoluteUri -TemplateParameterFile $opsNsgParametersFile
+
 }
 
 
-############################################################################
-### Deploy ADDS forest in cloud
-############################################################################
+###########################################################################
+## Deploy ADDS forest in cloud
+###########################################################################
 
 if ($Mode -eq "ADDS" -Or $Mode -eq "Prepare") {
     # Deploy AD tier in azure

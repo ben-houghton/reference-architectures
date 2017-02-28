@@ -2,32 +2,36 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "operationalVirtualNetworkName": {
-      "type": "string",
-      "defaultValue": "azure-operational-vnet",
-      "metadata": {
-        "description": "Operational Resources VNet"
-      }
-    },
     "operationalVirtualNetworkResourceGroupName": {
       "type": "string",
       "defaultValue": "uk-official-networking-rg",
       "metadata": {
-        "description": "Operational VNet Resource Group"
+        "description": "Networking Resource Group"
+      }
+    },
+    "vmAdminUserName": {
+      "type": "string",
+      "defaultValue": "AdminUser",
+      "metadata": {
+        "description": "VM Administrator Name"
+      }
+    },
+    "vmAdminPassword": {
+      "type": "string",
+      "defaultValue": "AweS0me@PW",
+      "metadata": {
+        "description": "VM Admin Password"
       }
     }
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/mspnp/template-building-blocks/master/",
     "localRepoBaseUrl": "https://raw.githubusercontent.com/ben-houghton/threetiertemplate/master/",
+    "operationalVirtualNetworkName": "azure-operational-vnet",
+    "managementlVirtualNetworkName": "azure-mgmt-vnet",
     "buildingBlocks": {
-      "loadBalancerTemplate": "[concat(variables('templateBaseUrl'), 'templates/buildingBlocks/loadBalancer-backend-n-vm/azuredeploy.json')]"
-    },
-    "parameterFiles": {
-      "webLoadBalancerParametersFile": "[concat(variables('localRepoBaseUrl'), 'parameters/azure/loadBalancer-web.parameters.json')]",
-      "bizLoadBalancerParametersFile": "[concat(variables('localRepoBaseUrl'), 'parameters/azure/loadBalancer-biz.parameters.json')]",
-      "dataLoadBalancerParametersFile": "[concat(variables('localRepoBaseUrl'), 'parameters/azure/loadBalancer-data.parameters.json')]",
-      "mgmtVMJumpboxParametersFile": "[concat(variables('localRepoBaseUrl'), 'parameters/azure/mgmt-virtualmachine.parameters.json')]"
+      "loadBalancerTemplate": "[concat(variables('templateBaseUrl'), 'templates/buildingBlocks/loadBalancer-backend-n-vm/azuredeploy.json')]",
+      "vmTemplate": "[concat(variables('templateBaseUrl'), 'templates/buildingBlocks/multi-vm-n-nic-m-storage/azuredeploy.json')]"
     }
   },
   "resources": [
@@ -38,12 +42,88 @@
       "properties": {
         "mode": "incremental",
         "templateLink": {
-          "uri": "[variables('buildingBlocks').virtualNetworkTemplate]",
+          "uri": "[variables('buildingBlocks').vmTemplate]",
           "contentVersion": "1.0.0.0"
         },
-        "parametersLink": {
-          "uri": "[variables('parameterFiles').mgmtVMJumpboxParametersFile]",
-          "contentVersion": "1.0.0.0"
+        "parameters": {
+          "virtualMachinesSettings": {
+            "value": {
+              "namePrefix": "azure-mgmt",
+              "computerNamePrefix": "jumpbox",
+              "size": "Standard_DS1_v2",
+              "osType": "windows",
+              "adminUsername": "[parameters('vmAdminUserName')]",
+              "adminPassword": "[parameters('vmAdminPassword')]",
+              "osAuthenticationType": "password",
+              "nics": [
+                {
+                  "isPublic": "true",
+                  "subnetName": "mgmt-subnet",
+                  "publicIPAllocationMethod": "Dynamic",
+                  "privateIPAllocationMethod": "Static",
+                  "startingIPAddress": "10.1.0.29",
+                  "enableIPForwarding": false,
+                  "dnsServers": [ ],
+                  "isPrimary": "true",
+                  "domainNameLabelPrefix": ""
+                }
+              ],
+              "imageReference": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2012-R2-Datacenter",
+                "version": "latest"
+              },
+              "dataDisks": {
+                "count": 0,
+                "properties": { }
+              },
+              "osDisk": {
+                "caching": "ReadWrite"
+              },
+              "extensions": [
+                {
+                  "name": "IaaSAntimalware",
+                  "publisher": "Microsoft.Azure.Security",
+                  "type": "IaaSAntimalware",
+                  "typeHandlerVersion": "1.3",
+                  "autoUpgradeMinorVersion": true,
+                  "settingsConfigMapperUri": "https://raw.githubusercontent.com/mspnp/template-building-blocks/master/templates/resources/Microsoft.Compute/virtualMachines/extensions/vm-extension-passthrough-settings-mapper.json",
+                  "settingsConfig": {
+                    "AntimalwareEnabled": true,
+                    "RealtimeProtectionEnabled": "false",
+                    "ScheduledScanSettings": {
+                      "isEnabled": "false",
+                      "day": "7",
+                      "time": "120",
+                      "scanType": "Quick"
+                    },
+                    "Exclusions": {
+                    }
+                  },
+                  "protectedSettingsConfig": {
+                  }
+                }
+              ],
+              "availabilitySet": {
+                "useExistingAvailabilitySet": "No",
+                "name": ""
+              }
+            }
+          },
+          "virtualNetworkSettings": {
+            "value": {
+              "name": "[variables('managementlVirtualNetworkName')]",
+              "resourceGroup": "[parameters('operationalVirtualNetworkResourceGroupName')]"
+            }
+          },
+          "buildingBlockSettings": {
+            "value": {
+              "storageAccountsCount": 1,
+              "vmCount": 1,
+              "vmStartIndex": 1
+            }
+          }
         }
       }
     },
@@ -64,8 +144,8 @@
                 "computerNamePrefix": "web",
                 "size": "Standard_DS1_v2",
                 "osType": "windows",
-                "adminUsername": "AdminUser",
-                "adminPassword": "AweS0me@PW",
+                "adminUsername": "[parameters('vmAdminUserName')]",
+                "adminPassword": "[parameters('vmAdminPassword')]",
                 "osAuthenticationType": "password",
                 "nics": [
                   {
@@ -198,7 +278,7 @@
             },
             "virtualNetworkSettings": {
               "value": {
-                "name": "[parameters('operationalVirtualNetworkName')]",
+                "name": "[variables('operationalVirtualNetworkName')]",
                 "resourceGroup": "[parameters('operationalVirtualNetworkResourceGroupName')]"
               }
             },
@@ -229,8 +309,8 @@
               "computerNamePrefix": "biz",
               "size": "Standard_DS1_v2",
               "osType": "windows",
-              "adminUsername": "AdminUser",
-              "adminPassword": "AweS0me@PW",
+              "adminUsername": "[parameters('vmAdminUserName')]",
+              "adminPassword": "[parameters('vmAdminPassword')]",
               "osAuthenticationType": "password",
               "nics": [
                 {
@@ -333,7 +413,7 @@
           },
           "virtualNetworkSettings": {
             "value": {
-              "name": "[parameters('operationalVirtualNetworkName')]",
+              "name": "[variables('operationalVirtualNetworkName')]",
               "resourceGroup": "[parameters('operationalVirtualNetworkResourceGroupName')]"
             }
           },
@@ -364,8 +444,8 @@
               "computerNamePrefix": "data",
               "size": "Standard_DS1_v2",
               "osType": "windows",
-              "adminUsername": "AdminUser",
-              "adminPassword": "AweS0me@PW",
+              "adminUsername": "[parameters('vmAdminUserName')]",
+              "adminPassword": "[parameters('vmAdminPassword')]",
               "osAuthenticationType": "password",
               "nics": [
                 {
@@ -468,7 +548,7 @@
           },
           "virtualNetworkSettings": {
             "value": {
-              "name": "[parameters('operationalVirtualNetworkName')]",
+              "name": "[variables('operationalVirtualNetworkName')]",
               "resourceGroup": "[parameters('operationalVirtualNetworkResourceGroupName')]"
             }
           },

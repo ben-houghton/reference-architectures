@@ -80,7 +80,6 @@ Login-AzureRmAccount -SubscriptionId $SubscriptionId  #| Out-Null
 
 if ($Mode -eq "Infrastructure" -Or $Mode -eq "DeployAll") {
 
-
     #Create resource group
 	Write-Host "Creating Networking resource group..."
     $azureNetworkResourceGroup = New-AzureRmResourceGroup -Name $azureNetworkResourceGroupName -Location $Location
@@ -107,12 +106,12 @@ if ($Mode -eq "Infrastructure" -Or $Mode -eq "DeployAll") {
 
 	##Create NSGs for management VNET
 	 Write-Host "Deploying NSGs"
-	 New-AzureRmResourceGroupDeployment -Name "nsg-deployment" -ResourceGroupName $azureNetworkResourceGroupName.ResourceGroupName `
+	 New-AzureRmResourceGroupDeployment -Name "nsg-deployment" -ResourceGroupName $azureNetworkResourceGroup.ResourceGroupName ` `
         -TemplateUri $nsgTemplate.AbsoluteUri -TemplateParameterFile $nsgParametersFile
 
 	#Create NSGs for ops VNET
 	 Write-Host "Deploying NSGs"
-	 New-AzureRmResourceGroupDeployment -Name "ops-nsg-deployment" -ResourceGroupName $azureNetworkResourceGroupName.ResourceGroupName `
+	 New-AzureRmResourceGroupDeployment -Name "ops-nsg-deployment" -ResourceGroupName $azureNetworkResourceGroup.ResourceGroupName ` 
         -TemplateUri $nsgTemplate.AbsoluteUri -TemplateParameterFile $opsNsgParametersFile
 
 }

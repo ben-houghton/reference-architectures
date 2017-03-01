@@ -17,7 +17,6 @@ A Microsoft Azure Three Tier Web Application Architecture For Workloads Classifi
 	- [Deploy Networking Infrastructure](#deploy-networking-infrastructure)
 	- [Deploy Active Directory Domain](#deploy-active-directory-domain)
 	- [Deploy operational workload infrastructure](#deploy-operational-workload-infrastructure)
-	- [Execute post deployment configuration](#execute-post-deployment-configuration)
 	- [(Optional) PowerShell Deployment](#optional-powershell-deployment)
 - [UK Governments Private Network Connectivity](#uk-governments-private-network-connectivity)
 - [Cost](#cost)
@@ -406,13 +405,13 @@ Portal.
   Set up IIS web server role for web tier|None required
   Enable Windows Auth for VMs|None required
   Deploy Microsoft Anti-malware to VMs|None required
-  Domain Join VMs|The provided template creates a demo 'treyresearch' domain. To ensure that Virtual Machines are correctly joined you can edit the vlues provided in the Deployment screen or edit the parameter configuration in the following files; [/parameters/azure/add-adds-domain-controller.parameters.json](/parameters/azure/add-adds-domain-controller.parameters.json); [/parameters/azure/vm-domain-join.parameters.json](/parameters/azure/vm-domain-join.parameters.json)
+  Domain Join VMs|Domain joining the Virtual Machines is a post deployment step and must be **manually** completed
                                                   
 
 ## Deployment Process
 
 A deployment for this reference architecture is available on
-[GitHub](https://github.com/ben-houghton/threetiertemplate/tree/master/templates). The templates can be cloned or downloaded if customisation of parameters are requried.
+[GitHub](https://aka.ms/ukofficialwebapp). The templates can be cloned or downloaded if customisation of parameters are requried.
 The reference architecture is deployed in four stages. To deploy the architecture, follow these steps for each deployment stage -
 
 For Virtual Machines The parameter files include a hard-coded
@@ -483,26 +482,6 @@ troubleshooting** blade.
 ![alt text](/images/create-official-workload-rg.JPG?raw=true "Create ADDS deployment").
 
 
-## Execute post deployment configuration (VM Domain Joining and Windows Authentication)
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fben-houghton%2Fthreetiertemplate%2Fmaster%2Ftemplates%2Fpostsetup.azuredeploy.json" target="_blank">
-<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
-</a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fben-houghton%2Fthreetiertemplate%2Fmaster%2Ftemplates%2Fpostsetup.azuredeploy.json" target="_blank">
-<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.png"/>
-</a>
-
-1. Click on the *Deploy to Azure* button to begin the first stage of the deployment. The link takes you to the Azure Portal.
-2. Select **Use Existing** and select the resource group you created for the operational workload deployment from the **Resource group** drop down
-4. Some parameters can be edited in the deployment page. If greater customisation is requried this can be down through cloning and editing the templates directly, or in situ by editing the templates by clicking 'Edit template'.
-5. In the **Settings** textboxes, enter the AD domain name and Admin credentials.
-7. Review the terms and conditions, then click the **I agree to the terms and conditions stated above** checkbox.
-8. Click on the **Purchase** button.
-9. Check Azure portal notification for a message that the stage of deployment is complete and move on to the next if completed.
-10. If for some reason your deployment fails check the deployment messages blade for futher information.
-
-![alt text](/images/create-postdeployment.JPG?raw=true "Deploy post deployment configuration").
-
-
 
 ##(Optional) PowerShell Deployment 
 
@@ -517,16 +496,14 @@ To deploy this solution through PowerShell, you will need the latest version of 
 - `Infrastructure`: deploys the networking infrastructure
 - `ADDS`: deploys the VMs acting as Active Directory DS servers, deploys Active Directory to these VMs, and deploys the domain in Azure.
 - `Operational`: deploys the web, business and data tier VMs and load balancers
-- `Post`: Initiates post deployment configuration such as domain joining the Jumpbox VM.
-- `Prepare`: deploys all the preceding deployments. 
+- `DeployAll`: deploys all the preceding deployments. 
 
 UK Governments Private Network Connectivity
 ===========================================
 
 Microsoft's customers are now able to use [private connections](https://news.microsoft.com/en-gb/2016/12/14/microsoft-now-offers-private-internet-connections-to-its-uk-data-centres/#sm.0001dca7sq10r1couwf4vvy9a85zx)
 to the company's UK data centres. Microsoft's partners are providing a gateway from PSN/N3 to [ExpressRoute](https://azure.microsoft.com/en-us/services/expressroute/) and into Azure - just one of the new services the group has unveiled
-since the company launched its [**Azure**](https://azure.microsoft.com/en-us/blog/) and Office 365 cloud offering in this country at launch (http://news.microsoft.com/en-gb/2016/09/07/not-publish-microsoft-becomes-first-company-open-data-centres-uk/). Since then, [**thousands of customers**](https://enterprise.microsoft.com/en-gb/industries/public-sector/microsoft-uk-data-centres-continue-to-build-momentum/?wt.mc_id=AID563187_QSG_1236)
-- including the Ministry of Defence, the Met Police and parts of the NHS - have signed up to take advantage of the sites, which offer UK data residency, security and reliability.
+since the company launched its [**Azure**](https://azure.microsoft.com/en-us/blog/) and Office 365 cloud offering in this country at launch (http://news.microsoft.com/en-gb/2016/09/07/not-publish-microsoft-becomes-first-company-open-data-centres-uk/). Since then, [**thousands of customers**](https://enterprise.microsoft.com/en-gb/industries/public-sector/microsoft-uk-data-centres-continue-to-build-momentum/?wt.mc_id=AID563187_QSG_1236) including the Ministry of Defence, the Met Police and parts of the NHS - have signed up to take advantage of the sites, which offer UK data residency, security and reliability.
 
 Cost
 ====

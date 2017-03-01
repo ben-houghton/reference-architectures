@@ -9,8 +9,8 @@ param(
   $Location,
   
   [Parameter(Mandatory=$false)]
-  [ValidateSet("Prepare", "Infrastructure", "ADDS", "Operational", "Post")]
-  $Mode = "Prepare"
+  [ValidateSet("DeployAll", "Infrastructure", "ADDS", "Operational")]
+  $Mode = "DeployAll"
 )
 
 $ErrorActionPreference = "Stop"
@@ -63,9 +63,6 @@ $mgmtVMJumpboxParametersFile  = [System.IO.Path]::Combine($PSScriptRoot, "parame
 $webLoadBalancerParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\loadBalancer-web.parameters.json")
 $bizLoadBalancerParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\loadBalancer-biz.parameters.json")
 $dataLoadBalancerParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\loadBalancer-data.parameters.json")
-#postdeployment config
-$azurenVmDomainJoinExtensionParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\vm-domain-join.parameters.json")
-$azureVmEnableWindowsAuthExtensionParametersFile = [System.IO.Path]::Combine($PSScriptRoot, "parameters\azure\vm-enable-windows-auth.parameters.json")
 
 # Azure ADDS Deployments
 $azureNetworkResourceGroupName = "uk-official-networking-rg"
@@ -81,7 +78,7 @@ Login-AzureRmAccount -SubscriptionId $SubscriptionId  #| Out-Null
 # Deploy Vnet and VPN Infrastructure in cloud
 ##########################################################################
 
-if ($Mode -eq "Infrastructure" -Or $Mode -eq "Prepare") {
+if ($Mode -eq "Infrastructure" -Or $Mode -eq "DeployAll") {
 
 
     #Create resource group
@@ -125,7 +122,7 @@ if ($Mode -eq "Infrastructure" -Or $Mode -eq "Prepare") {
 ## Deploy ADDS forest in cloud
 ###########################################################################
 
-if ($Mode -eq "ADDS" -Or $Mode -eq "Prepare") {
+if ($Mode -eq "ADDS" -Or $Mode -eq "DeployAll") {
     # Deploy AD tier in azure
 
     # Creating ADDS resource group
@@ -161,7 +158,7 @@ if ($Mode -eq "ADDS" -Or $Mode -eq "Prepare") {
 ## Deploy operational tier workloads loadbalancers & VMs
 ###########################################################################
 
-if ($Mode -eq "Workload" -Or $Mode -eq "Prepare") {
+if ($Mode -eq "Workload" -Or $Mode -eq "DeployAll") {
 
     Write-Host "Creating workload resource group..."
     $workloadResourceGroup = New-AzureRmResourceGroup -Name $workloadResourceGroupName -Location $Location
@@ -187,29 +184,6 @@ if ($Mode -eq "Workload" -Or $Mode -eq "Prepare") {
 
  }
 
-##############################################################################
-##### Domain join VMs
-##############################################################################
-
-if ($Mode -eq "Post" -Or $Mode -eq "Prepare") {
-
-
-    #Get Operational Resource groups
-	Write-Host "Get Operational resource group..."
-    $workloadResourceGroup = Get-AzureRmResourceGroup -Name $workloadResourceGroupName
-
-	#Domain join operational machines
-	Write-Host "Joining Operational Vms to domain..."
-    New-AzureRmResourceGroupDeployment -Name "vm-join-domain-deployment" -ResourceGroupName $workloadResourceGroup.ResourceGroupName `
-        -TemplateUri $virtualMachineExtensionsTemplate.AbsoluteUri -TemplateParameterFile $azurenVmDomainJoinExtensionParametersFile
-
-	#Enable windows authentication
-    Write-Host "Enable Windows Auth for Operational Vms..."
-    New-AzureRmResourceGroupDeployment -Name "vm-enable-windows-auth"  -ResourceGroupName $workloadResourceGroup.ResourceGroupName `
-        -TemplateUri $virtualMachineExtensionsTemplate.AbsoluteUri -TemplateParameterFile $azureVmEnableWindowsAuthExtensionParametersFile
-    
-    
- }
 
 
 

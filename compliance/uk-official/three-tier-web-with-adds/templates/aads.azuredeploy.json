@@ -16,13 +16,6 @@
         "description": "AD Domain"
       }
     },
-    "domainNetBiosName": {
-      "type": "string",
-      "defaultValue": "treyresearch",
-      "metadata": {
-        "description": "AD Domain Net Bios Name"
-      }
-    },
     "vmAdminUserName": {
       "type": "string",
       "defaultValue": "AdminUser",
@@ -47,7 +40,7 @@
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/mspnp/template-building-blocks/master/",
-    "localRepoBaseUrl": "https://raw.githubusercontent.com/ben-houghton/threetiertemplate/master/",
+    "localRepoBaseUrl": "https://raw.githubusercontent.com/mspnp/reference-architectures/master/guidance-uk-official/three-tier-web-with-adds/",
     "operationalVirtualNetworkName": "azure-operational-vnet",
     "managementlVirtualNetworkName": "azure-mgmt-vnet",
     "buildingBlocks": {
